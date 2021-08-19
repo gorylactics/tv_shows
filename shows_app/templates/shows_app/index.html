@@ -1,0 +1,41 @@
+{% extends "./base.html" %}
+{% block titulo %}{{titulo}}{% endblock%}
+{%block contenido%}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>{{titulo}}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <!-- aca va el for -->
+                            <td>uno</td>
+                            <td>dos</td>
+                            <td>tres</td>
+                            <td>cuatro</td>
+                            <td>
+                                <a href="">cinco 1</a>
+                                <a href="">cinco 2</a>
+                                <a href="">cinco 3</a>
+                            </td>
+                            <!-- aca temina el for -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{%endblock%}
