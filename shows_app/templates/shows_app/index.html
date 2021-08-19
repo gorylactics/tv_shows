@@ -1,5 +1,5 @@
-{% extends "./base.html" %}
-{% block titulo %}{{titulo}}{% endblock%}
+{%extends "./base.html" %}
+{%block titulo %}{{titulo}}{% endblock%}
 {%block contenido%}
     <div class="container">
         <div class="row">
@@ -27,9 +27,10 @@
                             <td>tres</td>
                             <td>cuatro</td>
                             <td>
-                                <a href="">cinco 1</a>
-                                <a href="">cinco 2</a>
-                                <a href="">cinco 3</a>
+                                <p class="opciones"><a href="">cinco 1</a></p>
+                                <p class="opciones"><a href="">cinco 2</a></p>
+                                <p class="opciones" onclick="enviar()" style="cursor:pointer">cinco 3</p>
+                                <form action="/" method="POST" name="formularioSubmit">{% csrf_token %}</form>
                             </td>
                             <!-- aca temina el for -->
                         </tr>
@@ -38,4 +39,27 @@
             </div>
         </div>
     </div>
+{%endblock%}
+{%block estilo%}
+<style>
+    .opciones{
+        display: inline;
+        <!-- color: red; -->
+    }
+    a{
+    text-decoration: none;
+    color: black;
+    }
+    a:hover{
+        color:black;
+    }
+</style>
+{%endblock%}
+{%block script%}
+<script>
+    function enviar()
+    {
+        document.formularioSubmit.submit()
+    }
+</script>
 {%endblock%}

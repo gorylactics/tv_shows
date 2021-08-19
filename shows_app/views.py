@@ -9,4 +9,7 @@ def index(request):
     contexto = {
         'titulo' : 'All Shows'
     }
-    return render(request, 'shows_app/index.html' , contexto)
+    if request.method == 'POST':
+        return redirect('/')
+    if request.method == 'GET':
+        return render(request, 'shows_app/index.html' , contexto)
