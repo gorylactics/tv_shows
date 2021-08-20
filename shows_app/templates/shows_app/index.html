@@ -12,30 +12,35 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>1</th>
-                            <th>2</th>
-                            <th>3</th>
-                            <th>4</th>
-                            <th>5</th>
+                            <th>Id</th>
+                            <th>Title</th>
+                            <th>Network</th>
+                            <th>Relesase Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for programa in programas%}
                         <tr>
-                            <!-- aca va el for -->
-                            <td>uno</td>
-                            <td>dos</td>
-                            <td>tres</td>
-                            <td>cuatro</td>
+                            <td>{{programa.id}}</td>
+                            <td>{{programa.title}}</td>
+                            <td>{{programa.network}}</td>
+                            <td>{{programa.release_date}}</td>
                             <td>
-                                <p class="opciones"><a href="">cinco 1</a></p>
-                                <p class="opciones"><a href="">cinco 2</a></p>
-                                <p class="opciones" onclick="enviar()" style="cursor:pointer">cinco 3</p>
-                                <form action="/" method="POST" name="formularioSubmit">{% csrf_token %}</form>
+                                <p class="opciones"><a href="">Show |</a></p>
+                                <p class="opciones"><a href="">Edit |</a></p>
+                                <p class="opciones" onclick="enviar()" style="cursor:pointer">Delete {{programa.id}}</p>
                             </td>
-                            <!-- aca temina el for -->
                         </tr>
+                        {%endfor%}
+                        <form action="/" method="POST" name="formularioSubmit">{% csrf_token %}</form>
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <a href="new">Add a New Show</a>
             </div>
         </div>
     </div>
@@ -44,7 +49,7 @@
 <style>
     .opciones{
         display: inline;
-        <!-- color: red; -->
+        color: black;
     }
     a{
     text-decoration: none;
