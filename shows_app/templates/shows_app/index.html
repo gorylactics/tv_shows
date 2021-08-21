@@ -20,27 +20,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for programa in programas%}
+                        {% for s in show%}
                         <tr>
-                            <td>{{programa.id}}</td>
-                            <td>{{programa.title}}</td>
-                            <td>{{programa.network}}</td>
-                            <td>{{programa.release_date}}</td>
+                            <td><a href="{{s.id}}"></a>{{s.id}}</a></td>
+                            <td>{{s.title}}</td>
+                            <td>{{s.network}}</td>
+                            <td>{{s.release_date|date:'F j,Y'}}</td>
                             <td>
-                                <p class="opciones"><a href="">Show |</a></p>
-                                <p class="opciones"><a href="">Edit |</a></p>
-                                <p class="opciones" onclick="enviar()" style="cursor:pointer">Delete {{programa.id}}</p>
+                                <p class="opciones"><a href="/shows/{{s.id}}">Show |</a></p>
+                                <p class="opciones"><a href="/shows/{{s.id}}/edit">Edit |</a></p>
+                                <p class="opciones"onclick=enviar({{s.id}}) style="cursor:pointer" >Delete</p>
                             </td>
                         </tr>
+                        <form action="/shows/{{s.id}}/delete" method="POST" id="{{s.id}}">{% csrf_token %}</form>
                         {%endfor%}
-                        <form action="/" method="POST" name="formularioSubmit">{% csrf_token %}</form>
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <a href="new">Add a New Show</a>
+                <a href="new"><h4>Add a New Show</h4></a>
             </div>
         </div>
     </div>
@@ -62,9 +62,9 @@
 {%endblock%}
 {%block script%}
 <script>
-    function enviar()
-    {
-        document.formularioSubmit.submit()
+    function enviar(id){
+        let formulario = document.getElementById(id);
+        formulario.submit();
     }
 </script>
 {%endblock%}
