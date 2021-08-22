@@ -1,21 +1,23 @@
 from django.shortcuts import render , redirect
 from .models import *
+from django.contrib import messages
 
 
 def base(request):
     return redirect('/shows')
+
 def index(request):
     show = Show.objects.all()
     if request.method == 'GET':
         contexto = {
                 'titulo' : 'All Shows',
-                'show' :  show
+                'show' :  show,
             }
         return render(request, 'shows_app/index.html' , contexto)
+    
     if request.method == 'POST':
-        
         print(request.POST)
-        
+        # este esta echo por el link que ejecuta el form
         return redirect('/')
 
 def shows(request , id):
@@ -32,16 +34,37 @@ def new(request):
             'titulo' : 'New Program'
         }
         return render(request, 'shows_app/new.html', contexto)
-
     if request.method == 'POST':
-        print(request.POST)
-        show = Show.objects.create(
+
+        # validador
+        errores = Show.objects.validacion(request.POST)
+
+        if len(errores) > 0:
+            print(errores)
+            for key , value in errores.items():
+                messages.error(request , value)
+            request.session['show_form_title'] = request.POST['title']
+            request.session['show_form_network'] = request.POST['network']
+            request.session['show_form_release_date'] = request.POST['release_date']
+            request.session['show_form_description'] = request.POST['description']
+            return redirect('/shows/new')
+
+        else:
+            print(request.POST)
+            request.session['show_form_title'] = ''
+            request.session['show_form_network'] = ''
+            request.session['show_form_description'] = ''
+            request.session['show_form_release_date'] = ''
+            
+            show = Show.objects.create(
             title = request.POST['title'],
             network = request.POST['network'],
+            release_date = request.POST['release_date'],
             description = request.POST['description'],
-            release_date = request.POST['release_date']
             )
-        return redirect(f'/shows/{show.id}')
+            mensajeExito = f'exito al agregar el Show {show.title}'
+            messages.success(request, mensajeExito)
+            return redirect(f'/shows/{show.id}')
 
 def edit(request, id):
     show = Show.objects.get(id = id)

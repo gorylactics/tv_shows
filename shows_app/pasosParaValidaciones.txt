@@ -1,0 +1,109 @@
+1 Crear el manager del modelo, si hay muchos modelos se puede hacer en un archivo aparta o dentro del mismo models.py
+
+2 el --> nombreClase_Manager(models.Manager) <-- hereda desde aca
+
+3 una funcion o def dentro de una clase siempre retorna un SELF ya que asi entrega los datos del objeto
+
+4 al modificar el objects por que manager esta dentro de objecst no es mas que agregarla m as funcionalidades a este
+
+5 se debe agregar como --> atributo al modelo <-- la sobre-escritura que hicimos del objects : ej objects = ShowManager()
+
+6 para crear las validaciones en el ShowManager se debe crear una funcion que retorne self y ademas reciba los datos que se estan pasando por el formulario como parametro cualquier nombre pero recomendado --> postData <--
+
+7 en esa funcion se crea un diccionario vacio con el nombre errors o errores o como sea que almacene los datos incorrectos
+
+8 los nombres que recibe posData son los name del formulario ,  no los atributos del model , es la info que esta introduciendo el usuario
+
+9 en la view.crear ejemplo se debe ingresar la llamada al validador antes cosa que se ejcute y vea si esta todo correcto antes de continuar con el proceso, ademas y muy importante como parametro recibe el request.POST que es en donde esta toda la info que esta agregando el usuario
+
+ej: errores = Show.objects.validacion(request.POST) y es show y no ShowManager debido a que show ya tiene incorporado el ShowManager por los pasos anteriores
+
+10 Dentro de la def vista se debe incluir las sentencias de control if & else en el caso de que encuentre errores y si los encuentra ir acumulandolos para mostrarcelos al usuario
+
+11. bajo la sentencia de la validacion se debe agregar la funcion de django mesagges , esta se importa en la cabecera del archivo views.py de la siguiente manera from django.contrib import mesagges
+
+12 se deben recorrer los errores  pasando su key y value  y dentro la sentencia que muestra los errores
+
+    ej:
+        for key , value in errores.items():
+            mesagges.error()
+
+13 en la sentencia anterior el mesagges.error() debe recibir el request (consulta) y el value del error a mostrar
+
+    ej:
+        for key , value in errores.items():
+            mesagges.error(request , value)
+
+14 despues se debe redirigir a la misma ventana del formulario , esto generaria que  los datos ingresador previos se borrarian, para eso se pueden usar las sesiones y ademas hay que configurar donde y como se mostrarian los mensajes en el template 
+
+15 Luego configurar en el base.html los mensajes de manera tal que se muestren en todas las paginas donde exista algun error;
+    Se hace de la siguiente manera
+
+16 toastr necesita cdn de jquery , ademas hay que dejar los cdn de boostrap css al inicio boostrap js al final luego jquery y luego toastr
+
+17 agregar al final de las librerias o en un js aparte la funcion de mensajes de toastr para que sea general
+
+18 configurar dentro de un script toastr para que suelte mensajes , tiene configurado 4 por defecto: error, success, warning e info, se hace asi 
+
+    <script>
+        toastr.options = {
+            'closeButton': true,
+            'progressBar': true,
+        }
+        //toastr.info('mensaje de info');
+        //toastr.error('mensaje de error');
+        //toastr.warning('mensaje de warning');
+        //toastr.success('mensaje de succsess');
+
+        {%if messages%}
+            {%for message in messages%}
+                toastr.{{message.tags}}('{{message}}')
+            {%endfor%}
+        {%endif%}
+    </script>
+
+19 Luego de configurado toastr se deben almacenar los datos que el usuario ingreso en variables de sesion en el area de la validacion, asi de esta manera aunque se aplique un redirect por parte de la validacion los datos quedaran almacenados dentro de variables de session , si paso la validacion estas sesiones o se eliminan o se dejan en blanco
+Esto se hace en la validacion de Views.py
+
+    if request.method == 'POST':
+        # validador
+        errores = Show.objects.validacion(request.POST)
+        if len(errores) > 0:
+            print(errores)
+            for key , value in errores.items():
+                messages.error(request , value)
+            
+            request.session['show_form_title'] = request.POST['title']
+            request.session['show_form_network'] = request.POST['network']
+            request.session['show_form_description'] = request.POST['description']
+            request.session['show_form_release_date'] = request.POST['release_date']
+            return redirect('/shows/new')
+        else:
+            print(request.POST)
+            request.session['show_form_title'] = ''
+            request.session['show_form_network'] = ''
+            request.session['show_form_description'] = ''
+            request.session['show_form_release_date'] = ''
+            show = Show.objects.create(
+            title = request.POST['title'],
+            network = request.POST['network'],
+            description = request.POST['description'],
+            release_date = request.POST['release_date']
+            )
+            return redirect(f'/shows/{show.id}')
+
+20 Ahora hay que pasar mediante el campo value que esta en cada input del formulario el dato de la variable de session
+    ej: <form action="/shows/new" method="POST">
+                {% csrf_token %}
+                <label for="title">Title</label>
+                <input type="text" name="title" id="" value="{{request.session.show_form_title}}" >
+                <label for="network">Network</label>
+                <input type="text" name="network" id="" value="{{request.session.show_form_network}}" >
+                <label for="release_date">Release Date</label>
+                <input type="date" name="release_date" id="" value="{{request.session.show_form_release_date}}" >
+                <label for="description">description</label>
+                <input type="text-area" name="description" value="{{request.session.show_form_description}}">
+                <button type="submit">Enviar</button>
+            </form>
+
+21 despues se puede agregar un message de exito para que el user sepa que la operacion funciono bien al final del else: antes del redirect
