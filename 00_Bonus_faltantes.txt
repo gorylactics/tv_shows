@@ -1,0 +1,9 @@
+Bonus de television
+_BONUS 1: Los enlaces "Show", "edit" y "Delete" se deben mostrar como íconos (considere Font Awesome)
+_BONUS 2: ¿Cómo podríamos tener los canales de televisión en una tabla separada? (considere una tabla con canales ya creados)
+_BONUS 3: El borrado debe tener "confirm", y puede ser ejecutado con AJAX
+
+Bonus Programas de TV semi REST-Full
+_NINJA BONUS: Permitir que la descripción sea opcional. Sin embargo, si se proporciona una descripción, aún debe tener al menos 10 caracteres.
+_SENSEI BONUS: Valide que un programa de televisión con ese título no exista en la base de datos antes de crearlo o actualizarlo.
+_SENSEI BONUS: ¡Haga validaciones de unicidad (incluida la visualización de errores) para crear y actualizar usando AJAX!

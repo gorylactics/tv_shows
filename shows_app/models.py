@@ -6,13 +6,13 @@ class ShowManager(models.Manager):
         errores={}
         fecha = datetime.now().strftime('%Y-%m-%d')
 
-        if len(postData['title']) < 5:
+        if len(postData['title']) < 2:
             errores['len_title'] = 'Title debe tener como minimo 5 caracteres'
 
         if len(postData['network']) < 3:
             errores['len_network'] = 'El largo minimo de Network debe ser de 3 caracteres'
             
-        if len(postData['description']) < 15:
+        if len(postData['description']) < 10:
             errores['len_description'] = 'La descripcion debe tener a lo menos 15 caracteres'
 
         if postData['release_date'] >= fecha:

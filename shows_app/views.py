@@ -66,6 +66,7 @@ def new(request):
             )
             mensajeExito = f'exito al agregar el Show {show.title}'
             messages.success(request, mensajeExito)
+            
             return redirect(f'/shows/{show.id}')
 
 def edit(request, id):
