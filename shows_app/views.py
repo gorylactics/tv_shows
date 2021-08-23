@@ -48,7 +48,7 @@ def new(request):
             request.session['show_form_network'] = request.POST['network']
             request.session['show_form_release_date'] = request.POST['release_date']
             request.session['show_form_description'] = request.POST['description']
-            
+
             return redirect('/shows/new')
 
         else:
@@ -78,14 +78,35 @@ def edit(request, id):
         return render(request , 'shows_app/edit.html', contexto)
     
     if request.method == 'POST':
-        print(request.POST , 'este es el post')
-        showActualizado = Show.objects.get(id = id)
-        showActualizado.title = request.POST['title']
-        showActualizado.network = request.POST['network']
-        showActualizado.description = request.POST['description']
-        showActualizado.release_date = request.POST['release_date'] 
-        showActualizado.save()
-        return redirect(f'/shows/{showActualizado.id}')
+        
+        # validador
+        errores = Show.objects.validacion(request.POST)
+        if len(errores) > 0:
+            print(errores)
+            for key , value in errores.items():
+                messages.warning(request , value)
+
+            request.session['show_form_title'] = request.POST['title']
+            request.session['show_form_network'] = request.POST['network']
+            request.session['show_form_release_date'] = request.POST['release_date']
+            request.session['show_form_description'] = request.POST['description']
+
+            return redirect(f'/shows/{show.id}/edit')
+        else:
+            print(request.POST)
+            request.session['show_form_title'] = ''
+            request.session['show_form_network'] = ''
+            request.session['show_form_description'] = ''
+            request.session['show_form_release_date'] = ''
+
+            print(request.POST , 'este es el post')
+            show = Show.objects.get(id = id)
+            show.title = request.POST['title']
+            show.network = request.POST['network']
+            show.description = request.POST['description']
+            show.release_date = request.POST['release_date'] 
+            show.save()
+            return redirect(f'/shows/{show.id}')
 
 def delete(request , id):
     show = Show.objects.get(id = id)
