@@ -1,10 +1,22 @@
 from django.db import models
+from datetime import datetime
 
 class ShowManager(models.Manager):
     def validacion(self, postData):
         errores={}
+        fecha = datetime.now().strftime('%Y-%m-%d')
+
         if len(postData['title']) < 5:
-            errores['len_title'] = 'el largo de title es minimo 5'
+            errores['len_title'] = 'Title debe tener como minimo 5 caracteres'
+
+        if len(postData['network']) < 3:
+            errores['len_network'] = 'El largo minimo de Network debe ser de 3 caracteres'
+            
+        if len(postData['description']) < 15:
+            errores['len_description'] = 'La descripcion debe tener a lo menos 15 caracteres'
+
+        if postData['release_date'] >= fecha:
+            errores['release_date'] = f'La fecha no puede ser igual o futura a hoy {fecha}'
         return errores
 
 class Show(models.Model):

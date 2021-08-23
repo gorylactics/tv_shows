@@ -42,11 +42,13 @@ def new(request):
         if len(errores) > 0:
             print(errores)
             for key , value in errores.items():
-                messages.error(request , value)
+                messages.warning(request , value)
+
             request.session['show_form_title'] = request.POST['title']
             request.session['show_form_network'] = request.POST['network']
             request.session['show_form_release_date'] = request.POST['release_date']
             request.session['show_form_description'] = request.POST['description']
+            
             return redirect('/shows/new')
 
         else:
